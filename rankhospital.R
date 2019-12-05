@@ -35,17 +35,28 @@ rankhospital <- function(state, outcome, num = "best") {
         ## 30-day death rate
         myVar <- 
                 if (outcome == "heart attack") {
-                        "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack"
+                        paste("Hospital.30.Day.Death.",
+                                ".Mortality..Rates.from.Heart.Attack",
+                                sep = "")
                 } else if (outcome == "heart failure") {
-                        "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure"
+                        paste("Hospital.30.Day.Death.",
+                                ".Mortality..Rates.from.Heart.Failure",
+                                sep="")
                 } else {
-                        "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
+                        paste("Hospital.30.Day.Death..Mortality.",
+                                ".Rates.from.Pneumonia",
+                              sep="")
                 }        
         stateData <- hostpitalData[hostpitalData$State == state,c("Hospital.Name",myVar)]
         suppressWarnings(stateData[,2] <- as.numeric(stateData[,2]))
         stateData <- stateData[complete.cases(stateData),]     
         sortedStateData <- order(stateData[,2],stateData[,1])
-        index <- if (num == "best") {1} else if (num == "worst") {-1} else {num}
+        index <- 
+                if (num == "best") {
+                        1
+                } else if (num == "worst") {
+                                length(sortedStateData)
+                } else {num}
         answerIndex = sortedStateData[index]
         stateData[answerIndex,1]
 }
